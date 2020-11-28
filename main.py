@@ -12,7 +12,7 @@ domain="pkupc.cn" #连不上可试试改为"162.105.86.11"
 #------必读部分   end------
 import time
 
-if __name__="__main__":
+if __name__=="__main__":
     if domain=="162.105.86.11":
 
      import path2
