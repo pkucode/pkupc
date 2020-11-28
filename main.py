@@ -12,16 +12,17 @@ domain="pkupc.cn" #连不上可试试改为"162.105.86.11"
 #------必读部分   end------
 import time
 
-if domain=="162.105.86.11":
+if __name__="__main__":
+    if domain=="162.105.86.11":
 
-    import path2
-    con = path2.getcon(course)
-    filename = name + con
-    cookie=path2.login(username,password,con,course)
-    path2.pkupc(con,cookie,filename,course)
-if  domain=="pkupc.cn":
-    import path1
-    con = path1.getcon(course)
-    filename = name + con
-    cookie = path1.login(username, password, con, course)
-    path1.pkupc(con, cookie, filename, course)
+     import path2
+     con = path2.getcon(course)
+     filename = name + con
+     cookie=path2.login(username,password,con,course)
+     path2.pkupc(con,cookie,filename,course)
+    if  domain=="pkupc.cn":
+     import path1
+     con = path1.getcon(course)
+     filename = name + con
+     cookie = path1.login(username, password, con, course)
+     path1.pkupc(con, cookie, filename, course)
