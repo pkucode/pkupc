@@ -1,5 +1,7 @@
 """@https://github.com/pkucode
-pkupc题目及代码自动抓取器"""
+pkupc题目及代码自动抓取器
+北京大学计算概论作业网站 编程网格备份工具 pkupc.cn爬虫，可以批量备份计概课作业的答题记录和原题
+"""
 
 #------必读部分 begin------
 #python3运行，需要安装好bs4库 pip install bs4 (安装出错可以百度python安装beautifulsoup4)
