@@ -32,7 +32,7 @@ def getcon(course,add):
     return tpcon
 
 def login(username,password,content,course,add):
-    header={'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9', 'Accept-Encoding': 'gzip, deflate', 'Accept-Language': 'en-US,en;q=0.9', 'Cache-Control': 'max-age=0', 'Connection': 'keep-alive', 'Content-Length': '265', 'Content-Type': 'application/x-www-form-urlencoded', 'Host': 'pkupc.cn', 'Origin': 'http://'+add, 'Referer': 'http://'+add+'/programming/course/'+course+'/showProblemList.do?problemsId='+content, 'Upgrade-Insecure-Requests': '1', 'User-Agent': 'PkupcSpider@github.com/pkucode'}
+    header={'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9', 'Accept-Encoding': 'gzip, deflate', 'Accept-Language': 'en-US,en;q=0.9', 'Cache-Control': 'max-age=0', 'Connection': 'keep-alive', 'Content-Length': '265', 'Content-Type': 'application/x-www-form-urlencoded', 'Host': 'pkupc.cn', 'Origin': 'http://pkupc.cn', 'Referer': 'http://pkupc.cn/programming/course/'+course+'/showProblemList.do?problemsId='+content, 'Upgrade-Insecure-Requests': '1', 'User-Agent': 'PkupcSpider@github.com/pkucode'}
     data={
     "referer": "http://"+add+"/programming/course/"+course+"/show.do",
           "username":username,
@@ -55,7 +55,7 @@ def pkupc(content,cookie,filename,course,add):
     q = "http://"+add+"/programming/course/"+course+"/showProblemList.do?problemsId="
 
     header={'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9', 'Accept-Encoding': 'gzip, deflate', 'Accept-Language': 'en-US,en;q=0.9', 'Connection': 'keep-alive',
-            'Host': add,
+            'Host': 'pkupc.cn',
             'Referer': 'http://'+add+'/programming/course/'+course+'/show.do?referer=http%3A%2F%2Fpkupc.cn%2Fprogramming%2Fcourse%2F'+course+'%2Fshow.do',
             'Upgrade-Insecure-Requests': '1',
             'Cookie': cookie,
@@ -69,8 +69,10 @@ def pkupc(content,cookie,filename,course,add):
     # print(qq)
 
     os.system("mkdir "+filename)
+    os.system("mkdir "+filename+"/code")
     for f in qq:
-        href="http://pkupc.cn/programming/problem/submit.history?problemId="+f+"&problemsId="+content
+        # print(f)
+        href="http://"+add+"/programming/problem/submit.history?problemId="+f+"&problemsId="+content
         quizhref = "http://"+add+"/programming/problem/"+f+"/show.do?problemsId="+content
         quizres=requests.get(quizhref,headers=header).text
         # print(quizres)
@@ -85,9 +87,11 @@ def pkupc(content,cookie,filename,course,add):
         try:
             # 抓取提交记录
             res2 = requests.get(href, headers=header)
+            # print(res2.text)
             source = res2.text
             targe = re.findall("solution.do.solutionId=(.*?)&sourceCode=true", source)
             count = 1
+            # print(target)
             for t in targe:
                 target = "http://"+add+"/programming/problem/solution.do?solutionId=" + t + "&sourceCode=true"
                 res3 = requests.get(target, headers=header)
@@ -100,10 +104,16 @@ def pkupc(content,cookie,filename,course,add):
                     ac = bs.find_all(color="red")[0]
                 st = st + '<br><br><font size="15">' + ac.get_text() + "</font><br><br>"
                 st = st + "<br><pre>" + str(bs.find_all("code")[0]) + "</pre><br><br><br>"
+                rawcode=str(bs.find_all("code")[0].get_text())
+                if "Passed" in ac.get_text():
+                    rfile=open(filename+"/code/"+"[Passed]"+title+"_"+str(count)+".cpp","w")
+                    print(rawcode,file=rfile)
+                else:
+                    rfile = open(filename + "/code/" + "[Non-Passed]" + title + "_" + str(count) + ".cpp", "w")
+                    print(rawcode, file=rfile)
                 count += 1
         except:pass
         print("成功抓取题目'"+title+"',正在合成网页")
         rfile = open(filename+"/" + title + ".html", "w", encoding="gb2312")
         print(st+en, file=rfile)
-
 
